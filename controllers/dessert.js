@@ -33,27 +33,42 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-try {
-const { name, ingredients, price } = req.body;
+  try {
+    const {
+      name,
+      ingredients,
+      price,
+      createdAt,
+      specialinstruction,
+      deliveryaddress,
+      dessertype
+    } = req.body;
 
-// Optional: validate on server side
-if (!name || !ingredients || !price) {
-return res.status(400).json({ message: 'All fields are required' });
-}
+    // Create a new Dessert instance
+    const newDessert = new Dessert({
+      name,
+      ingredients,
+      price,
+      createdAt: createdAt || Date.now(),
+      specialinstruction,
+      deliveryaddress,
+      dessertype
+    });
 
-const dessert = new Dessert({
-name,
-ingredients,
-price
+    // Save to database
+    const savedDessert = await newDessert.save();
+
+    // Respond to client
+    res.status(201).json({
+      message: 'Dessert successfully created',
+      dessert: savedDessert
+    });
+
+  } catch (error) {
+    console.error('Error saving dessert:', error.message);
+    res.status(400).json({ error: error.message });
+  }
 });
-
-const savedDessert = await dessert.save();
-res.status(201).json(savedDessert);
-} catch (err) {
-res.status(500).json({ message: err.message });
-}
-});
-
 
 
 
