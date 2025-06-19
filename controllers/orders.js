@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Orders = require('../models/orders');
 const Dessert = require('../models/dessert');
 const user = require('../models/user');
@@ -7,7 +8,23 @@ const verifyToken = require('../middleware/verify-token');
 const router = express.Router();
 
 // not access to the dessert without authentication
-router.use(verifyToken);
+router.get('/orders', async (req, res) => {
+  try {
+    const orders = await Orders.find()
+      .populate('desserttypeId')       
+      .populate('user', '-password');  
+
+    if (!orders.length) {
+      return res.status(404).json({ message: 'No orders found.' });
+    }
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error('Error fetching all orders:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 
 router.post('/orders', async (req, res) => {
     try {
@@ -68,6 +85,30 @@ router.post('/orders', async (req, res) => {
 
 
 
+
+// NO TOKEN REQUIRED HERE
+router.get('/orders/:userId', async (req, res) => {
+  const { userId } = req.params;
+const encodedId = Buffer.from(userId,'base64').toString('utf-8')
+  try {
+    if (!mongoose.Types.ObjectId.isValid(encodedId)) {
+      return res.status(400).json({ message: 'Invalid user ID format.' });
+    }
+
+    const userOrders = await Orders.find({ user: encodedId}) 
+      .populate('user', '-password')
+      .populate('desserttypeId');
+
+    if (!userOrders.length) {
+      return res.status(404).json({ message: 'No orders found for this user.' });
+    }
+
+    res.status(200).json(userOrders);
+  } catch (error) {
+    console.error('Error fetching orders for user:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 module.exports = router;
 
 

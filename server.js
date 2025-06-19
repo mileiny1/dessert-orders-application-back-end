@@ -19,13 +19,15 @@ mongoose.connection.on('connected', () => {
 });
 
 // this is my frontend
-const allowedOrigins = ['http://localhost:5173']; 
+//const allowedOrigins = ['http://localhost:5173']; 
 
 // to connect with frontend
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
-}));
+//app.use(cors({
+  //origin: allowedOrigins,
+  //credentials: true,
+//}));
+app.use(cors());
+
 app.use(logger('dev'));
 app.use(express.json()); //to parse JSON bodies
 
