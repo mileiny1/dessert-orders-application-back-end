@@ -7,6 +7,8 @@ const express = require('express');
 const verifyToken = require('../middleware/verify-token');
 const router = express.Router();
 
+router.use(verifyToken);
+
 // not access to the dessert without authentication
 router.get('/orders', async (req, res) => {
   try {
@@ -26,10 +28,11 @@ router.get('/orders', async (req, res) => {
 });
 
 
-router.post('/orders', async (req, res) => {
+router.post('/orders', verifyToken, async (req, res) => {
     try {
         // Extract data from the request body
         const {
+            
             user,
             ordersnumber,
             orderstype,
