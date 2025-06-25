@@ -19,7 +19,7 @@ mongoose.connection.on('connected', () => {
 });
 
 // this is my frontend
-const allowedOrigins = ['https://frontend-nine-tau-71.vercel.app/']; 
+const allowedOrigins = ['https://frontend-nine-tau-71.vercel.app']; 
 
 // to connect with frontend
 app.use(cors({
