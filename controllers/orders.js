@@ -89,7 +89,7 @@ router.post('/orders', verifyToken, async (req, res) => {
 
 
 
-// NO TOKEN REQUIRED HERE
+// User has to sign in to see their orders
 router.get('/orders/:userId', async (req, res) => {
   const { userId } = req.params;
 const encodedId = Buffer.from(userId,'base64').toString('utf-8')
