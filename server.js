@@ -19,14 +19,14 @@ mongoose.connection.on('connected', () => {
 });
 
 // this is my frontend
-//const allowedOrigins = ['http://localhost:5173']; 
+const allowedOrigins = ['https://frontend-nine-tau-71.vercel.app/']; 
 
 // to connect with frontend
-//app.use(cors({
-  //origin: allowedOrigins,
-  //credentials: true,
-//}));
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+
 
 app.use(logger('dev'));
 app.use(express.json()); //to parse JSON bodies
